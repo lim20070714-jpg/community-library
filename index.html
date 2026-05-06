@@ -3,416 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社区图书馆 - 首页</title>
+    <title>社区图书馆</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
-        }
-        body {
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        header h1 {
-            color: #2c3e50;
-        }
-        header .admin-btn {
-            padding: 8px 16px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            padding: 10px 20px;
-            background: #eee;
-            border: none;
-            cursor: pointer;
-            margin-right: 5px;
-            border-radius: 4px 4px 0 0;
-        }
-        .tab-btn.active {
-            background: #3498db;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .book-list, .room-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .book-card, .room-card {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 15px;
-            transition: box-shadow 0.3s;
-        }
-        .book-card:hover, .room-card:hover {
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .book-card h3, .room-card h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #3498db;
-        }
-        .book-card p, .room-card p {
-            margin-bottom: 10px;
-            color: #666;
-        }
-        .btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        .borrow-btn {
-            background: #2ecc71;
-            color: white;
-        }
-        .return-btn {
-            background: #e74c3c;
-            color: white;
-        }
-        .reserve-btn {
-            background: #f39c12;
-            color: white;
-        }
-        .detail-btn {
-            background: #9b59b6;
-            color: white;
-        }
-        .borrowed-tag {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        .reserved-tag {
-            color: #f39c12;
-            font-weight: bold;
-        }
-        .history-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .history-section h2 {
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        .history-list {
-            list-style: none;
-        }
-        .history-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+        body{padding:20px;background:#f5f5f5}
+        .container{max-width:1000px;margin:0 auto;background:white;padding:20px;border-radius:10px}
+        header{display:flex;justify-content:space-between;margin-bottom:20px}
+        .tab{padding:10px 20px;cursor:pointer;background:#eee;border:none;margin-right:5px}
+        .tab.active{background:#4285f4;color:white}
+        .tab-content{display:none;margin-top:20px}
+        .tab-content.active{display:block}
+        .book-list,.room-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:15px}
+        .card{border:1px solid #ddd;padding:15px;border-radius:8px}
+        .btn{padding:8px 12px;margin-top:10px;border:none;border-radius:5px;cursor:pointer}
+        .borrow{background:#0f9d58;color:white}
+        .return{background:#db4437;color:white}
+        .reserve{background:#f4b400;color:white}
+        .cancel{background:#db4437;color:white}
+        .detail{background:#4285f4;color:white}
+        .status{font-weight:bold;margin:10px 0}
+        .borrowed{color:#db4437}
+        .reserved{color:#f4b400}
+        .my-record{margin-top:30px}
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>社区图书馆</h1>
-            <button class="admin-btn" onclick="goToAdmin()">管理员入口</button>
-        </header>
+<div class="container">
+    <header>
+        <h1>社区图书馆</h1>
+        <button class="btn" onclick="location.href='admin.html'">管理员</button>
+    </header>
 
-        <!-- 标签页切换 -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('books')">图书借阅</button>
-            <button class="tab-btn" onclick="switchTab('rooms')">活动室预约</button>
-            <button class="tab-btn" onclick="switchTab('history')">我的记录</button>
-        </div>
-
-        <!-- 图书借阅标签页 -->
-        <div id="books" class="tab-content active">
-            <h2>图书列表</h2>
-            <div class="book-list" id="bookList">
-                <!-- 图书卡片由JS动态生成 -->
-            </div>
-        </div>
-
-        <!-- 活动室预约标签页 -->
-        <div id="rooms" class="tab-content">
-            <h2>活动室列表</h2>
-            <div class="room-list" id="roomList">
-                <!-- 活动室卡片由JS动态生成 -->
-            </div>
-        </div>
-
-        <!-- 我的记录标签页 -->
-        <div id="history" class="tab-content">
-            <div class="history-section">
-                <h2>已借阅图书</h2>
-                <ul class="history-list" id="borrowedBooks"></ul>
-            </div>
-            <div class="history-section">
-                <h2>已预约活动室</h2>
-                <ul class="history-list" id="reservedRooms"></ul>
-            </div>
-        </div>
+    <div class="tabs">
+        <button class="tab active" onclick="setTab(0)">图书借阅</button>
+        <button class="tab" onclick="setTab(1)">活动室预约</button>
+        <button class="tab" onclick="setTab(2)">我的记录</button>
     </div>
 
-    <script>
-        // 初始化数据（localStorage无数据时填充默认值）
-        const initData = () => {
-            // 图书数据
-            if (!localStorage.getItem('books')) {
-                const defaultBooks = [
-                    { id: 1, title: "《平凡的世界》", author: "路遥", desc: "一部全景式地表现中国当代城乡社会生活的长篇小说", borrowed: false, borrower: "" },
-                    { id: 2, title: "《三体》", author: "刘慈欣", desc: "中国科幻文学的里程碑之作", borrowed: false, borrower: "" },
-                    { id: 3, title: "《百年孤独》", author: "加西亚·马尔克斯", desc: "魔幻现实主义文学的代表作", borrowed: false, borrower: "" },
-                    { id: 4, title: "《红楼梦》", author: "曹雪芹", desc: "中国古典四大名著之首", borrowed: false, borrower: "" }
-                ];
-                localStorage.setItem('books', JSON.stringify(defaultBooks));
+    <div class="tab-content active" id="bookTab">
+        <h2>图书列表</h2>
+        <div class="book-list" id="bookList"></div>
+    </div>
+
+    <div class="tab-content" id="roomTab">
+        <h2>活动室</h2>
+        <div class="room-list" id="roomList"></div>
+    </div>
+
+    <div class="tab-content" id="recordTab">
+        <div class="my-record">
+            <h3>我借阅的图书</h3>
+            <div id="myBooks"></div>
+        </div>
+        <div class="my-record" style="margin-top:20px">
+            <h3>我预约的活动室</h3>
+            <div id="myRooms"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+let books = [];
+let rooms = [];
+let currentUser = "访客";
+const DATA_URL = "https://raw.githubusercontent.com/lim/community-library/main/data.json";
+
+function getUserName() {
+    let user = localStorage.getItem("userName");
+    if (!user) {
+        user = prompt("请输入你的姓名：");
+        if (!user) user = "访客";
+        localStorage.setItem("userName", user);
+    }
+    currentUser = user;
+}
+
+async function loadGlobalData() {
+    try {
+        const res = await fetch(DATA_URL + "?t=" + new Date().getTime());
+        const data = await res.json();
+        books = data.books;
+        rooms = data.rooms;
+        renderAll();
+    } catch (e) {
+        alert("数据加载失败，请刷新重试");
+    }
+}
+
+async function borrowBook(id) {
+    await loadGlobalData();
+    const book = books.find(b => b.id == id);
+    if (book.borrowed) {
+        alert("借阅失败：这本书已被 " + book.borrower + " 借走！");
+        return;
+    }
+    book.borrowed = true;
+    book.borrower = currentUser;
+    alert("借阅成功！");
+    loadGlobalData();
+}
+
+async function returnBook(id) {
+    await loadGlobalData();
+    const book = books.find(b => b.id == id);
+    if (!book.borrowed) return;
+    if (book.borrower !== currentUser) {
+        alert("你不能归还别人的书！");
+        return;
+    }
+    book.borrowed = false;
+    book.borrower = "";
+    alert("归还成功");
+    loadGlobalData();
+}
+
+async function reserveRoom(id) {
+    await loadGlobalData();
+    const room = rooms.find(r => r.id == id);
+    if (room.reserved) {
+        alert("预约失败：该活动室已被占用！");
+        return;
+    }
+    room.reserved = true;
+    room.reserver = currentUser;
+    alert("预约成功");
+    loadGlobalData();
+}
+
+async function cancelRoom(id) {
+    await loadGlobalData();
+    const room = rooms.find(r => r.id == id);
+    if (!room.reserved) return;
+    room.reserved = false;
+    room.reserver = "";
+    alert("已取消预约");
+    loadGlobalData();
+}
+
+function renderAll() {
+    renderBooks();
+    renderRooms();
+    renderRecords();
+}
+
+function renderBooks() {
+    const dom = document.getElementById("bookList");
+    dom.innerHTML = "";
+    books.forEach(book => {
+        dom.innerHTML += `
+        <div class="card">
+            <h3>${book.title}</h3>
+            <p>作者：${book.author}</p>
+            <p class="status ${book.borrowed?'borrowed':''}">
+                ${book.borrowed?'已借出：'+book.borrower:'可借阅'}
+            </p>
+            <button class="btn detail" onclick="location.href='book-detail.html?id=${book.id}'">详情</button>
+            ${!book.borrowed ?
+                `<button class="btn borrow" onclick="borrowBook(${book.id})">借阅</button>` :
+                `<button class="btn return" onclick="returnBook(${book.id})">归还</button>`
             }
+        </div>`;
+    });
+}
 
-            // 活动室数据
-            if (!localStorage.getItem('rooms')) {
-                const defaultRooms = [
-                    { id: 1, name: "多功能活动室", capacity: 20, time: "9:00-12:00", reserved: false, reserver: "" },
-                    { id: 2, name: "阅读分享室", capacity: 10, time: "14:00-17:00", reserved: false, reserver: "" },
-                    { id: 3, name: "儿童活动室", capacity: 15, time: "10:00-16:00", reserved: false, reserver: "" }
-                ];
-                localStorage.setItem('rooms', JSON.stringify(defaultRooms));
+function renderRooms() {
+    const dom = document.getElementById("roomList");
+    dom.innerHTML = "";
+    rooms.forEach(r => {
+        dom.innerHTML += `
+        <div class="card">
+            <h3>${r.name}</h3>
+            <p>容量：${r.capacity}人</p>
+            <p>时间：${r.time}</p>
+            <p class="status ${r.reserved?'reserved':''}">
+                ${r.reserved?'已预约：'+r.reserver:'可预约'}
+            </p>
+            ${!r.reserved ?
+                `<button class="btn reserve" onclick="reserveRoom(${r.id})">预约</button>` :
+                `<button class="btn cancel" onclick="cancelRoom(${r.id})">取消</button>`
             }
-        };
+        </div>`;
+    });
+}
 
-        // 切换标签页
-        const switchTab = (tabId) => {
-            // 重置所有标签和内容
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            // 激活选中的标签和内容
-            event.target.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-            
-            // 切换到历史页时刷新记录
-            if (tabId === 'history') {
-                renderBorrowedBooks();
-                renderReservedRooms();
-            }
-        };
+function renderRecords() {
+    const myBooks = books.filter(b => b.borrower === currentUser);
+    const myRooms = rooms.filter(r => r.reserver === currentUser);
+    document.getElementById("myBooks").innerHTML = myBooks.map(b => `
+        <div class="card">${b.title} <button class="btn return" onclick="returnBook(${b.id})">归还</button></div>
+    `).join("");
+    document.getElementById("myRooms").innerHTML = myRooms.map(r => `
+        <div class="card">${r.name} <button class="btn cancel" onclick="cancelRoom(${r.id})">取消</button></div>
+    `).join("");
+}
 
-        // 渲染图书列表
-        const renderBookList = () => {
-            const books = JSON.parse(localStorage.getItem('books')) || [];
-            const bookListEl = document.getElementById('bookList');
-            bookListEl.innerHTML = '';
+function setTab(index) {
+    document.querySelectorAll(".tab").forEach((t,i) => {
+        t.classList.toggle("active", i === index);
+    });
+    document.querySelectorAll(".tab-content").forEach((c,i) => {
+        c.classList.toggle("active", i === index);
+    });
+}
 
-            books.forEach(book => {
-                const bookCard = document.createElement('div');
-                bookCard.className = 'book-card';
-                bookCard.innerHTML = `
-                    <h3>${book.title}</h3>
-                    <p>作者：${book.author}</p>
-                    <p>${book.borrowed ? '<span class="borrowed-tag">已借出</span>' : '可借阅'}</p>
-                    <button class="btn detail-btn" onclick="goToBookDetail(${book.id})">查看详情</button>
-                    ${book.borrowed 
-                        ? `<button class="btn return-btn" onclick="returnBook(${book.id})">归还</button>` 
-                        : `<button class="btn borrow-btn" onclick="borrowBook(${book.id})">借阅</button>`}
-                `;
-                bookListEl.appendChild(bookCard);
-            });
-        };
-
-        // 渲染活动室列表
-        const renderRoomList = () => {
-            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
-            const roomListEl = document.getElementById('roomList');
-            roomListEl.innerHTML = '';
-
-            rooms.forEach(room => {
-                const roomCard = document.createElement('div');
-                roomCard.className = 'room-card';
-                roomCard.innerHTML = `
-                    <h3>${room.name}</h3>
-                    <p>容量：${room.capacity}人</p>
-                    <p>可预约时段：${room.time}</p>
-                    <p>${room.reserved ? '<span class="reserved-tag">已预约</span>' : '可预约'}</p>
-                    ${room.reserved 
-                        ? '<button class="btn return-btn" onclick="cancelReserve('+room.id+')">取消预约</button>' 
-                        : '<button class="btn reserve-btn" onclick="reserveRoom('+room.id+')">预约</button>'}
-                `;
-                roomListEl.appendChild(roomCard);
-            });
-        };
-
-        // 渲染已借阅图书
-        const renderBorrowedBooks = () => {
-            const books = JSON.parse(localStorage.getItem('books')) || [];
-            const borrowedBooksEl = document.getElementById('borrowedBooks');
-            borrowedBooksEl.innerHTML = '';
-
-            const borrowedBooks = books.filter(book => book.borrowed);
-            if (borrowedBooks.length === 0) {
-                borrowedBooksEl.innerHTML = '<li>暂无已借阅图书</li>';
-                return;
-            }
-
-            borrowedBooks.forEach(book => {
-                const li = document.createElement('li');
-                li.className = 'history-item';
-                li.innerHTML = `
-                    <span>${book.title}（作者：${book.author}）</span>
-                    <button class="btn return-btn" onclick="returnBook(${book.id})">归还</button>
-                `;
-                borrowedBooksEl.appendChild(li);
-            });
-        };
-
-        // 渲染已预约活动室
-        const renderReservedRooms = () => {
-            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
-            const reservedRoomsEl = document.getElementById('reservedRooms');
-            reservedRoomsEl.innerHTML = '';
-
-            const reservedRooms = rooms.filter(room => room.reserved);
-            if (reservedRooms.length === 0) {
-                reservedRoomsEl.innerHTML = '<li>暂无已预约活动室</li>';
-                return;
-            }
-
-            reservedRooms.forEach(room => {
-                const li = document.createElement('li');
-                li.className = 'history-item';
-                li.innerHTML = `
-                    <span>${room.name}（时段：${room.time}）</span>
-                    <button class="btn return-btn" onclick="cancelReserve(${room.id})">取消预约</button>
-                `;
-                reservedRoomsEl.appendChild(li);
-            });
-        };
-
-        // 借阅图书
-        const borrowBook = (bookId) => {
-            const books = JSON.parse(localStorage.getItem('books')) || [];
-            const bookIndex = books.findIndex(book => book.id === bookId);
-            
-            if (bookIndex === -1) return;
-            if (books[bookIndex].borrowed) {
-                alert('该书已被借出！');
-                return;
-            }
-
-            const userName = prompt('请输入您的姓名：');
-            if (!userName) return;
-
-            books[bookIndex].borrowed = true;
-            books[bookIndex].borrower = userName;
-            localStorage.setItem('books', JSON.stringify(books));
-            alert(`借阅成功！请妥善保管《${books[bookIndex].title}》`);
-            renderBookList();
-        };
-
-        // 归还图书
-        const returnBook = (bookId) => {
-            const books = JSON.parse(localStorage.getItem('books')) || [];
-            const bookIndex = books.findIndex(book => book.id === bookId);
-            
-            if (bookIndex === -1) return;
-            if (!books[bookIndex].borrowed) {
-                alert('该书未被借出，无需归还！');
-                return;
-            }
-
-            if (confirm(`确认归还《${books[bookIndex].title}》吗？`)) {
-                books[bookIndex].borrowed = false;
-                books[bookIndex].borrower = "";
-                localStorage.setItem('books', JSON.stringify(books));
-                alert('归还成功！');
-                renderBookList();
-                renderBorrowedBooks(); // 刷新历史记录
-            }
-        };
-
-        // 预约活动室
-        const reserveRoom = (roomId) => {
-            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
-            const roomIndex = rooms.findIndex(room => room.id === roomId);
-            
-            if (roomIndex === -1) return;
-            if (rooms[roomIndex].reserved) {
-                alert('该活动室已被预约！');
-                return;
-            }
-
-            const userName = prompt('请输入您的姓名：');
-            if (!userName) return;
-
-            rooms[roomIndex].reserved = true;
-            rooms[roomIndex].reserver = userName;
-            localStorage.setItem('rooms', JSON.stringify(rooms));
-            alert(`预约成功！您已预约${rooms[roomIndex].name}（${rooms[roomIndex].time}）`);
-            renderRoomList();
-        };
-
-        // 取消活动室预约
-        const cancelReserve = (roomId) => {
-            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
-            const roomIndex = rooms.findIndex(room => room.id === roomId);
-            
-            if (roomIndex === -1) return;
-            if (!rooms[roomIndex].reserved) {
-                alert('该活动室未被预约，无需取消！');
-                return;
-            }
-
-            if (confirm(`确认取消${rooms[roomIndex].name}的预约吗？`)) {
-                rooms[roomIndex].reserved = false;
-                rooms[roomIndex].reserver = "";
-                localStorage.setItem('rooms', JSON.stringify(rooms));
-                alert('取消预约成功！');
-                renderRoomList();
-                renderReservedRooms(); // 刷新历史记录
-            }
-        };
-
-        // 跳转到图书详情页
-        const goToBookDetail = (bookId) => {
-            window.location.href = `book-detail.html?id=${bookId}`;
-        };
-
-        // 跳转到管理员页面
-        const goToAdmin = () => {
-            window.location.href = 'admin.html';
-        };
-
-        // 页面加载初始化
-        window.onload = () => {
-            initData();
-            renderBookList();
-            renderRoomList();
-        };
-    </script>
+window.onload = async () => {
+    getUserName();
+    await loadGlobalData();
+};
+</script>
 </body>
 </html>
