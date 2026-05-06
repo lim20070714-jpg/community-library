@@ -1,0 +1,54 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "三体",
+      "author": "刘慈欣",
+      "desc": "科幻经典作品，讲述人类与三体文明的碰撞",
+      "borrowed": false,
+      "borrower": ""
+    },
+    {
+      "id": 2,
+      "title": "平凡的世界",
+      "author": "路遥",
+      "desc": "现实主义文学杰作",
+      "borrowed": false,
+      "borrower": ""
+    },
+    {
+      "id": 3,
+      "title": "百年孤独",
+      "author": "加西亚·马尔克斯",
+      "desc": "魔幻现实主义代表作",
+      "borrowed": false,
+      "borrower": ""
+    }
+  ],
+  "rooms": [
+    {
+      "id": 1,
+      "name": "研讨室A",
+      "capacity": 6,
+      "time": "9:00-12:00",
+      "reserved": false,
+      "reserver": ""
+    },
+    {
+      "id": 2,
+      "name": "阅读室",
+      "capacity": 10,
+      "time": "14:00-17:00",
+      "reserved": false,
+      "reserver": ""
+    },
+    {
+      "id": 3,
+      "name": "儿童活动室",
+      "capacity": 8,
+      "time": "10:00-16:00",
+      "reserved": false,
+      "reserver": ""
+    }
+  ]
+}
