@@ -26,6 +26,7 @@
         .reserved{color:#f4b400}
         .my-record{margin-top:30px}
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="container">
@@ -63,6 +64,9 @@
 </div>
 
 <script>
+const SUPABASE_URL = 'https://gnzpzcflenprmyulfusj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_hv_4jUuQsAGp4XCJDEmR1w_c8rZADBn';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let books = [];
 let rooms = [];
 let currentUser = "访客";
@@ -80,12 +84,24 @@ function getUserName() {
 
 async function loadGlobalData() {
     try {
-        const res = await fetch(DATA_URL + "?t=" + new Date().getTime());
-        const data = await res.json();
-        books = data.books;
-        rooms = data.rooms;
+        // 从 Supabase 查询 books 表的所有数据
+        const { data: booksData, error: booksError } = await supabase
+            .from('books')
+            .select('*');
+        
+        // 从 Supabase 查询 rooms 表的所有数据
+        const { data: roomsData, error: roomsError } = await supabase
+            .from('rooms')
+            .select('*');
+        
+        if (booksError) throw booksError;
+        if (roomsError) throw roomsError;
+        
+        books = booksData;
+        rooms = roomsData;
         renderAll();
     } catch (e) {
+        console.error('数据加载失败:', e);
         alert("数据加载失败，请刷新重试");
     }
 }
